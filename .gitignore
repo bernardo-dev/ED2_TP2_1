@@ -1,0 +1,6 @@
+*.bin
+*.txt
+*.TXT
+build/
+valgrind-out.txt
+
