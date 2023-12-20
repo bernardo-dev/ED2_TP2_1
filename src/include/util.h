@@ -2,9 +2,8 @@
 #define UTIL_H
 
 #include "registro.h"
-#include <stdio.h>
 #include <stdbool.h>
-
+#include <stdio.h>
 
 typedef struct entrada {
   short int metodo;
@@ -12,6 +11,10 @@ typedef struct entrada {
   short int situacao;
   char opcional[3];
 } Entrada;
+
+
+// Aceita ate 512KB por pagina, caso necessario realizar paginacao
+static unsigned long int ITENS_POR_PAGINA = (512 * 1024) / sizeof(Registro);
 
 // Le "n" linhas do arquivo "PROVAO.TXT"
 void lerNElementosDoArquivo(FILE *arquivo, Registro registros[],

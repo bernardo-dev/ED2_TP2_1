@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "include/quicksort.h"
 #include "include/registro.h"
 #include "include/util.h"
 
@@ -53,44 +54,37 @@ int main(int argc, char *argv[]) {
     printf("Executando o método quicksort\n");
 
     char nomeArquivo[] = "PROVAO.bin";
-    /* Declaracao dos tipos utilizados no quicksort externo */
 
+    /* Declaracao dos tipos utilizados no quicksort externo */
     // Leitura inferior
     FILE *pArqLi = fopen(nomeArquivo, "r+b");
-
-    // Leitura superior
-    FILE *pArqLs = fopen(nomeArquivo, "r+b");
-
-    // Escrita inferior
-    FILE *pArqEi = fopen(nomeArquivo, "r+b");
-
-    // Escrita superior
-    FILE *pArqEs = fopen(nomeArquivo, "r+b");
-
-    if (!(pArqLi && pArqLs && pArqEi && pArqEs)) {
+    if (pArqLi == NULL) {
       printf("Arquivo nao pode ser aberto\n");
-      fclose(pArqLi);
-      fclose(pArqLs);
-      fclose(pArqEi);
-      fclose(pArqEs);
       exit(1);
     }
 
-    fseek(pArqLi, 0, SEEK_END);
-    long final = ftell(pArqLi);
-    final = final / sizeof(Registro);
-    printf("Quantidade de registros = %ld\n", final);
+    // Leitura superior
+    FILE *pArqLs = fopen(nomeArquivo, "r+b");
+    if (pArqLs == NULL) {
+      printf("Arquivo nao pode ser aberto\n");
+      exit(1);
+    }
 
-    // quicksortExterno(pArqLi, pArqLs, pArqEi, pArqEs, 1, final);
+    // Escrita inferior
+    FILE *pArqEi = fopen(nomeArquivo, "r+b");
+    if (pArqEi == NULL) {
+      printf("Arquivo nao pode ser aberto\n");
+      exit(1);
+    }
 
-    fflush(pArqLi);
-    fseek(pArqLi, 0, SEEK_SET);
-    imprimirArquivoBinario(pArqLi);
-
-    fclose(pArqLi);
-    fclose(pArqLs);
-    fclose(pArqEi);
-    fclose(pArqEs);
+    // Escrita superior
+    FILE *pArqEs = fopen(nomeArquivo, "r+b");
+    if (pArqEs == NULL) {
+      printf("Arquivo nao pode ser aberto\n");
+      exit(1);
+    }
+    
+    quicksortExterno(pArqLi, pArqLs, pArqEi, pArqEs, 1, entrada.qtde_registros);
   } break;
   }
 

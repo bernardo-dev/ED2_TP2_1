@@ -4,9 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Aceita ate 512KB por pagina, caso necessario realizar paginacao
-static unsigned long int ITENS_POR_PAGINA = (512 * 1024) / sizeof(Registro);
-
 // Le "n" linhas do arquivo "PROVAO.TXT"
 void lerNElementosDoArquivo(FILE *arquivo, Registro registros[],
                             unsigned int n) {
@@ -85,9 +82,9 @@ bool lerEntrada(Entrada *entrada, int argc, char *argv[]) {
   return true;
 }
 
-void imprimirArquivoBinario(FILE *pArquivo){
+void imprimirArquivoBinario(FILE *pArquivo) {
   Registro registro;
-  while(fread(&registro, sizeof(Registro), 1, pArquivo)) {
+  while (fread(&registro, sizeof(Registro), 1, pArquivo)) {
     printf("Registro = %lf\n", registro.nota);
   }
 }
