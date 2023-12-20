@@ -84,3 +84,10 @@ bool lerEntrada(Entrada *entrada, int argc, char *argv[]) {
 
   return true;
 }
+
+void imprimirArquivoBinario(FILE *pArquivo){
+  Registro registro;
+  while(fread(&registro, sizeof(Registro), 1, pArquivo)) {
+    printf("Registro = %lf\n", registro.nota);
+  }
+}

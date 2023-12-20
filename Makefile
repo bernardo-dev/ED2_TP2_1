@@ -47,6 +47,7 @@ $(BUILD_DIR)/src/%.debug.o: $(SRC_DIRS)/%.c
 .PHONY: clean
 clean:
 	rm -r $(BUILD_DIR)
+	rm -rf PROVAO.bin
 
 .PHONY: valgrind
 valgrind: $(BUILD_DIR)/$(TARGET_EXEC)_debug

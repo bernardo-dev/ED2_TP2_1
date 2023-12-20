@@ -23,4 +23,7 @@ FILE *converterParaBinario(FILE *arquivo, unsigned int qtde_registros_arquivo);
 // Le e verifica se a entrada passada pelo terminal eh valida.
 bool lerEntrada(Entrada *entrada, int argc, char *argv[]);
 
+// Imprime apenas as notas dos registros do arquivo binario
+void imprimirArquivoBinario(FILE *);
+
 #endif // UTIL_H
