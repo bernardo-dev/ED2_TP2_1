@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Aceita ate 512KB por pagina, caso necessario realizar paginacao
+static unsigned long int ITENS_POR_PAGINA = (512 * 1024) / sizeof(Registro);
+
 // Le "n" linhas do arquivo "PROVAO.TXT"
 void lerNElementosDoArquivo(FILE *arquivo, Registro registros[],
                             unsigned int n) {
@@ -51,6 +54,34 @@ FILE *converterParaBinario(FILE *arquivo, unsigned int qtde_registros_arquivo) {
 
   desalocarRegistros(pagina);
   return arquivo_binario;
+}
+
+// Converte o arquivo binario "PROVAO.bin" para um arquivo equivalente em texto "PROVAO_{qntde_registros}.tx".
+FILE *converterParaTexto(FILE *arquivo, unsigned int qtde_registros_arquivo) {
+  unsigned int qtde_registros_lidos;
+  char nome_arquivo[21];
+  Registro *pagina;
+  FILE *arquivo_texto;
+
+  sprintf(nome_arquivo, "PROVAO_%u.txt", qtde_registros_arquivo);
+  
+  pagina = alocarRegistros(ITENS_POR_PAGINA);
+
+  if(pagina == NULL)
+    return NULL;
+
+  if ((arquivo_texto = fopen(nome_arquivo, "w")) == NULL)
+    return NULL;
+
+  while((qtde_registros_lidos = fread(pagina, sizeof(Registro), ITENS_POR_PAGINA, arquivo)) != 0)
+    for(unsigned int i = 0 ; i < qtde_registros_lidos ; i++)
+      fprintf(arquivo_texto, "%8lu %5lf %2s %50s %30s\n",
+               pagina[i].numero_inscricao, pagina[i].nota,
+               pagina[i].estado, pagina[i].cidade,
+               pagina[i].curso);
+
+
+  return arquivo_texto;
 }
 
 // Le e verifica se a entrada passada pelo terminal eh valida.

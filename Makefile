@@ -1,4 +1,3 @@
-CC=gcc-11
 # Define o nome do executável que será gerado
 TARGET_EXEC := exe
 

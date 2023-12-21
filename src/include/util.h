@@ -12,16 +12,15 @@ typedef struct entrada {
   char opcional[3];
 } Entrada;
 
-
-// Aceita ate 512KB por pagina, caso necessario realizar paginacao
-static unsigned long int ITENS_POR_PAGINA = (512 * 1024) / sizeof(Registro);
-
 // Le "n" linhas do arquivo "PROVAO.TXT"
 void lerNElementosDoArquivo(FILE *arquivo, Registro registros[],
                             unsigned int n);
 
 // Converte o arquivo texto "PROVAO.TXT" para um arquivo equivalente em binario.
 FILE *converterParaBinario(FILE *arquivo, unsigned int qtde_registros_arquivo);
+
+// Converte o arquivo binario "PROVAO.bin" para um arquivo equivalente em texto.
+FILE *converterParaTexto(FILE *pArqLi, unsigned int qtde_registros);
 
 // Le e verifica se a entrada passada pelo terminal eh valida.
 bool lerEntrada(Entrada *entrada, int argc, char *argv[]);

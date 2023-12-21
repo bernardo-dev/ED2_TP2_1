@@ -85,6 +85,22 @@ int main(int argc, char *argv[]) {
     }
     
     quicksortExterno(pArqLi, pArqLs, pArqEi, pArqEs, 1, entrada.qtde_registros);
+    fclose(pArqLi);
+    fclose(pArqLs);
+    fclose(pArqEi);
+    fclose(pArqEs);
+
+    FILE *pArquivo = fopen(nomeArquivo, "rb");
+    Registro reg;
+    while(fread(&reg, sizeof(Registro), 1, pArqLi)) 
+    {
+      printf("%8lu %5lf %2s %50s %30s\n",
+               reg.numero_inscricao, reg.nota,
+               reg.estado, reg.cidade,
+               reg.curso);
+    }
+    fclose(pArquivo);
+    //converterParaTexto(pArqLi, entrada.qtde_registros);
   } break;
   }
 
