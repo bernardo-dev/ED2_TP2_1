@@ -32,6 +32,8 @@ int main(int argc, char *argv[]) {
       Cria uma versao binaria do arquivo de texto plano "PROVAO.TXT" cuja
       quantidade total de registros eh a quantidade passada por argumento
       para o programa.
+
+      O nome do arquivo binario gerado eh "PROVAO.bin".
   */
   if ((arquivo_binario =
            converterParaBinario(arquivo, entrada.qtde_registros)) == NULL) {
@@ -40,69 +42,42 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
+  switch (entrada.metodo) 
+  {
+    case 1:
+    {
+      printf("Executando o método 2f-fitas\n");
+      break;
+    }
+    case 2:
+    {
+      printf("Executando o método f+1 fitas\n");
+      break;
+    }
+    case 3:
+    {
+      fclose(arquivo_binario);
+
+      if(quickSortExterno(entrada.qtde_registros) == false)
+      {
+        printf("Erro ao tentar executar o metodo QuickSort Externo. Abortando o programa...\n");
+        exit(1);
+      }
+
+      if((arquivo_binario = fopen("PROVAO.bin", "rb")) == NULL)
+      {
+        printf("Erro ao tentar abrir o arquivo binario novamente! Abortando o programa...\n");
+        exit(1);
+      }
+
+      converterParaTexto(arquivo_binario, entrada.qtde_registros);
+
+      break;
+    }
+  }
+
   fclose(arquivo);
   fclose(arquivo_binario);
-
-  switch (entrada.metodo) {
-  case 1:
-    printf("Executando o método 2f-fitas\n");
-    break;
-  case 2:
-    printf("Executando o método f+1 fitas\n");
-    break;
-  case 3: {
-    printf("Executando o método quicksort\n");
-
-    char nomeArquivo[] = "PROVAO.bin";
-
-    /* Declaracao dos tipos utilizados no quicksort externo */
-    // Leitura inferior
-    FILE *pArqLi = fopen(nomeArquivo, "r+b");
-    if (pArqLi == NULL) {
-      printf("Arquivo nao pode ser aberto\n");
-      exit(1);
-    }
-
-    // Leitura superior
-    FILE *pArqLs = fopen(nomeArquivo, "r+b");
-    if (pArqLs == NULL) {
-      printf("Arquivo nao pode ser aberto\n");
-      exit(1);
-    }
-
-    // Escrita inferior
-    FILE *pArqEi = fopen(nomeArquivo, "r+b");
-    if (pArqEi == NULL) {
-      printf("Arquivo nao pode ser aberto\n");
-      exit(1);
-    }
-
-    // Escrita superior
-    FILE *pArqEs = fopen(nomeArquivo, "r+b");
-    if (pArqEs == NULL) {
-      printf("Arquivo nao pode ser aberto\n");
-      exit(1);
-    }
-    
-    quicksortExterno(pArqLi, pArqLs, pArqEi, pArqEs, 1, entrada.qtde_registros);
-    fclose(pArqLi);
-    fclose(pArqLs);
-    fclose(pArqEi);
-    fclose(pArqEs);
-
-    FILE *pArquivo = fopen(nomeArquivo, "rb");
-    Registro reg;
-    while(fread(&reg, sizeof(Registro), 1, pArqLi)) 
-    {
-      printf("%8lu %5lf %2s %50s %30s\n",
-               reg.numero_inscricao, reg.nota,
-               reg.estado, reg.cidade,
-               reg.curso);
-    }
-    fclose(pArquivo);
-    //converterParaTexto(pArqLi, entrada.qtde_registros);
-  } break;
-  }
 
   return 0;
 }

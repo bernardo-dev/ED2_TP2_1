@@ -1,8 +1,9 @@
 #ifndef QUICKSORT_H
 #define QUICKSORT_H
 
-#include <stdio.h>
+#include <stdbool.h>
 
-bool quicksortExterno(FILE *, FILE *, FILE *, FILE *, int, int);
+// Ordena o arquivo "PROVAO.bin" por meio do metodo QuickSort externo.
+bool quickSortExterno(unsigned int qtde_registros);
 
 #endif // QUICKSORT_H

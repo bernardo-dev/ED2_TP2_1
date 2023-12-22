@@ -73,13 +73,18 @@ FILE *converterParaTexto(FILE *arquivo, unsigned int qtde_registros_arquivo) {
   if ((arquivo_texto = fopen(nome_arquivo, "w")) == NULL)
     return NULL;
 
+  rewind(arquivo);
+
   while((qtde_registros_lidos = fread(pagina, sizeof(Registro), ITENS_POR_PAGINA, arquivo)) != 0)
     for(unsigned int i = 0 ; i < qtde_registros_lidos ; i++)
-      fprintf(arquivo_texto, "%8lu %5lf %2s %50s %30s\n",
+      fprintf(arquivo_texto, "%08lu %05.1lf %2s %50s %30s\n",
                pagina[i].numero_inscricao, pagina[i].nota,
                pagina[i].estado, pagina[i].cidade,
                pagina[i].curso);
 
+  desalocarRegistros(pagina);
+
+  fclose(arquivo_texto);
 
   return arquivo_texto;
 }

@@ -20,7 +20,7 @@ void lerNElementosDoArquivo(FILE *arquivo, Registro registros[],
 FILE *converterParaBinario(FILE *arquivo, unsigned int qtde_registros_arquivo);
 
 // Converte o arquivo binario "PROVAO.bin" para um arquivo equivalente em texto.
-FILE *converterParaTexto(FILE *pArqLi, unsigned int qtde_registros);
+FILE *converterParaTexto(FILE *arquivo, unsigned int qtde_registros_arquivo);
 
 // Le e verifica se a entrada passada pelo terminal eh valida.
 bool lerEntrada(Entrada *entrada, int argc, char *argv[]);

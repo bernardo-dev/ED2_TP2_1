@@ -22,7 +22,7 @@ INC_DIRS := $(shell find $(SRC_DIRS) -type d)
 INC_FLAGS := $(addprefix -I, $(INC_DIRS))
 
 # Define as flags de compilação para o pré-processador
-CFLAGS := $(INC_FLAGS) -MMD -MP -Wall -Wextra -Werror -std=c17
+CFLAGS := $(INC_FLAGS) -MMD -MP -Wall -Wextra #-Werror -std=c17
 CFLAGS_DEBUG := $(CFLAGS) -g
 
 # Define a regra para gerar o executável
@@ -36,7 +36,7 @@ $(BUILD_DIR)/$(TARGET_EXEC)_debug: $(OBJS_DEBUG)
 # Define a regra para gerar cada arquivo objeto a partir do arquivo fonte correspondente
 $(BUILD_DIR)/src/%.o: $(SRC_DIRS)/%.c
 	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(CCFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS_DEBUG) $(CCFLAGS) -c $< -o $@
 
 # Define a regra para gerar cada arquivo objeto de debug a partir do arquivo fonte correspondente
 $(BUILD_DIR)/src/%.debug.o: $(SRC_DIRS)/%.c
