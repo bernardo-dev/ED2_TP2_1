@@ -1,135 +1,174 @@
 #include "include/registro.h"
-#include "include/util.h"
 
-#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 
-#define TAMANHO_MAX 10
+#define TAM_MEMORIA_PRINCIPAL 10
 
 typedef struct {
-  Registro vetor[TAMANHO_MAX];
+  Registro vetor[TAM_MEMORIA_PRINCIPAL];
   unsigned int tamMax;
   unsigned int tamOcupado;
 } Area;
 
-void FAVazia(Area *pArea) {
-  pArea->tamMax = TAMANHO_MAX;
+void inicializarArea(Area *pArea) {
+  pArea->tamMax = TAM_MEMORIA_PRINCIPAL;
   pArea->tamOcupado = 0;
   for (int i = 0; i < 10; i++) {
-    pArea->vetor[i].nota = 0;
+    pArea->vetor[i].nota = 200;
     memset(pArea->vetor[i].estado, '\0', 3);
     memset(pArea->vetor[i].cidade, '\0', 51);
     memset(pArea->vetor[i].curso, '\0', 31);
   }
 }
 
-void lerSup(FILE *pArqLs, Registro *pUltLido, int *pLs, bool *pOndeLer) {
+void imprimirArea(Area *pArea) {
+  if (pArea->tamOcupado == 0) {
+    printf("Area vazia\n");
+    return;
+  }
+
+  printf("Area interna\n");
+
+  for (unsigned int i = 0; i < pArea->tamOcupado; i++) {
+    printf("Registro %d \n", i + 1);
+    printf("\tNota [%lf]\n", pArea->vetor[i].nota);
+    printf("\tEstado [%s]\n", pArea->vetor[i].estado);
+    printf("\tCidade [%s]\n", pArea->vetor[i].curso);
+    printf("---------\n");
+  }
+}
+
+// Busca de O(log n)
+unsigned int buscaBinaria(Area *pArea, double nota) {
+  int insercao;
+  int inicio = 0;
+  int fim = pArea->tamOcupado - 1;
+  int meio = 0;
+
+  while (inicio <= fim) {
+    meio = inicio + (fim - inicio) / 2;
+    printf("meio = %d\n", meio);
+
+    if (pArea->vetor[meio].nota == nota) {
+      // Registro com nota igual encontrada na posicao meio
+      return insercao = meio;
+    }
+
+    if (pArea->vetor[meio].nota < nota) {
+      inicio = meio + 1; // Descartar metade inferior
+    } else {
+      fim = meio - 1; // Descartar metade superior
+    }
+  }
+
+  // Retornar a posicao onde a chave deve ser inserida
+  return insercao = inicio;
+}
+
+// Insercao de O(n)
+void inserirOrdenadoNaArea(Area *pArea, Registro *pRegistro) {
+  if (pArea->tamOcupado == pArea->tamMax) {
+    return;
+  }
+
+  if (pArea->tamOcupado == 0) {
+    pArea->vetor[0] = *pRegistro;
+    pArea->tamOcupado++;
+    return;
+  }
+
+  // Posicao que deve ser inserido o novo registro
+  unsigned int posicao = buscaBinaria(pArea, pRegistro->nota);
+  printf("Posicao de insercao = %u\n", posicao);
+
+  // Desloca os elementos maiores para abrir espaco para o novo registro
+  for (unsigned int i = pArea->tamOcupado; i > posicao; i--) {
+    pArea->vetor[i] = pArea->vetor[i - 1];
+  }
+
+  // Insere o registro na posicao correta
+  pArea->vetor[posicao] = *pRegistro;
+
+  pArea->tamOcupado++;
+}
+
+void retiraUltimoArea(Area *pArea, Registro *pRegistro){
+  *pRegistro = pArea->vetor[pArea->tamOcupado - 1];
+  pArea->tamOcupado--;
+}
+
+void retiraPrimeiroArea(Area *pArea, Registro *pRegistro) {
+  *pRegistro = pArea->vetor[0];
+  for (int i = 0; i < pArea->tamOcupado; i++) {
+    pArea->vetor[i] = pArea->vetor[i + 1];
+  }
+  pArea->tamOcupado--;
+}
+
+void lerSuperior(FILE *pArqLs, Registro *pUltimoLido, int *pLs,
+                 bool *pOndeLer) {
   fseek(pArqLs, (*pLs - 1) * sizeof(Registro), SEEK_SET);
-  fread(pUltLido, sizeof(Registro), 1, pArqLs);
+  fread(pUltimoLido, sizeof(Registro), 1, pArqLs);
   (*pLs)--;
   *pOndeLer = false;
 }
 
-void lerInf(FILE *pArqLi, Registro *pUltLido, int *pLi, bool *pOndeLer) {
-  fread(pUltLido, sizeof(Registro), 1, pArqLi);
+void lerInferior(FILE *pArqLi, Registro *pUltimoLido, int *pLi,
+                 bool *pOndeLer) {
+  fread(pUltimoLido, sizeof(Registro), 1, pArqLi);
   (*pLi)++;
   *pOndeLer = true;
 }
 
-void inserirArea(Area *pArea, Registro *pUltLido, int *pNRArea) {
-  // insere o registro 'pUltLido' de forma ordenada na área
-  insereItem(*pUltLido, pArea);
-  *pNRArea = pArea->tamOcupado;
-}
-
-void escreveMax(FILE *pArqEs, Registro *pRegistro, int *pEs) {
+void escreveMax(FILE *pArqEs, Registro registro, int *pEs) {
   fseek(pArqEs, (*pEs - 1) * sizeof(Registro), SEEK_SET);
-  fwrite(pRegistro, sizeof(Registro), 1, pArqEs);
+  fwrite(&registro, sizeof(Registro), 1, pArqEs);
   (*pEs)--;
 }
 
-void escreveMin(FILE *pArqEi, Registro *pRegistro, int *pEi) {
-  fwrite(pRegistro, sizeof(Registro), 1, pArqEi);
+void escreveMin(FILE *pArqEi, Registro registro, int *pEi) {
+  fwrite(&registro, sizeof(Registro), 1, pArqEi);
   (*pEi)++;
 }
 
-void retiraMax(Area *pArea, Registro *pRegistro, int *pNRArea) {
-  retiraUltimo(pArea, pRegistro);
+void retiraMax(Area *pArea, Registro *pRegistro, int *pNRArea){
+  retiraUltimoArea(pArea, pRegistro);
   *pNRArea = pArea->tamOcupado;
 }
 
-void retiraMin(Area *pArea, Registro *pRegistro, int *pNRArea) {
-  retiraPrimeiro(pArea, pRegistro);
+void retiraMin(Area *pArea, Registro *pRegistro, int *pNRArea){
+  retiraPrimeiroArea(pArea, pRegistro);
   *pNRArea = pArea->tamOcupado;
 }
 
 void particao(FILE *pArqLi, FILE *pArqLs, FILE *pArqEi, FILE *pArqEs,
               Area *pArea, int esquerda, int direita, int *pI, int *pJ) {
-  int Ls, Es = direita;
-  int Li, Ei = esquerda;
+  unsigned int leituraSuperior = direita;
+  unsigned int escritaSuperior = direita;
 
-  int NRArea = 0;
-  double Linf = -1;
-  double Lsup = 101;
+  unsigned int leituraInferior = esquerda;
+  unsigned int escritaInferior = esquerda;
 
-  bool OndeLer = true;
-  Registro UltLido, registro;
+  int ocupacaoArea = 0;
+  double limiteInferior = -1;
+  double limiteSuperior = 101;
 
-  fseek(pArqLi, (Li - 1) * sizeof(Registro), SEEK_SET);
-  fseek(pArqEi, (Es - 1) * sizeof(Registro), SEEK_SET);
+  bool ondeLer = true;
+  Registro ultimoLido, registro;
+
+  fseek(pArqLi, (leituraInferior - 1) * sizeof(Registro), SEEK_SET);
+  fseek(pArqEi, (escritaSuperior - 1) * sizeof(Registro), SEEK_SET);
 
   *pI = esquerda - 1;
   *pJ = direita + 1;
-
-  while (Ls >= Li) {
-    if (NRArea < pArea->tamMax - 1) {
-      if (OndeLer) {
-        lerSup(pArqLs, &UltLido, &Ls, &OndeLer);
-      } else {
-        lerInf(pArqLi, &UltLido, &Li, &OndeLer);
+  while (leituraSuperior >= leituraInferior) {
+    if (pArea->tamOcupado < pArea->tamMax) {
+      if (ondeLer) {
+        lerSuperior(pArqEs, &ultimoLido, &leituraSuperior, &ondeLer);
       }
-      inserirArea(pArea, &UltLido, &NRArea);
-      continue;
     }
-    if (Ls == Es) {
-      lerSup(pArqLs, &UltLido, &Ls, &OndeLer);
-    } else if (Li == Ei) {
-      lerInf(pArqLi, &UltLido, &Li, &OndeLer);
-    } else if (OndeLer) {
-      lerSup(pArqEs, &UltLido, &Ls, &OndeLer);
-    } else {
-      lerInf(pArqLi, &UltLido, &Li, &OndeLer);
-    }
-
-    if (UltLido.nota > Lsup) {
-      *pJ = Es;
-      escreveMax(pArqEs, &UltLido, &Es);
-      continue;
-    }
-
-    if (UltLido.nota < Linf) {
-      *pI = Ei;
-      escreveMin(pArqEi, &UltLido, &Ei);
-    }
-
-    inserirArea(pArea, &UltLido, &NRArea);
-
-    if (Ei - esquerda < direita - Es) {
-      retiraMin(pArea, &registro, &NRArea);
-      escreveMin(pArqEi, &registro, &Ei);
-      Linf = registro.nota;
-    } else {
-      retiraMax(pArea, &registro, &NRArea);
-      escreveMax(pArqEi, &registro, &Es);
-      Lsup = registro.nota;
-    }
-  }
-
-  while (Ei <= Es) {
-    retiraMin(pArea, &registro, &NRArea);
-    escreveMin(pArqEi, &registro, &Ei);
   }
 }
 
@@ -142,16 +181,33 @@ void quicksortExterno(FILE *pArqLi, FILE *pArqLs, FILE *pArqEi, FILE *pArqEs,
   if (direita - esquerda < 1)
     return;
 
-  FAVazia(&area);
+  inicializarArea(&area);
+
+  imprimirArea(&area);
+  printf("\n\n\n");
 
   particao(pArqLi, pArqLs, pArqEi, pArqEs, &area, esquerda, direita, &i, &j);
 
-  // Ordena primeiro o subarquivo menor
-  if (i - esquerda < direita - j) {
-    quicksortExterno(pArqLi, pArqLs, pArqEi, pArqEs, esquerda, i);
-    quicksortExterno(pArqLi, pArqLs, pArqEi, pArqEs, j, direita);
-  } else {
-    quicksortExterno(pArqLi, pArqLs, pArqEi, pArqEs, j, direita);
-    quicksortExterno(pArqLi, pArqLs, pArqEi, pArqEs, esquerda, i);
-  }
+  imprimirArea(&area);
 }
+
+/*
+void quicksortExterno() {
+  Area area;
+
+  inicializarArea(&area);
+
+  Registro registro;
+  FILE *pArquivo = fopen("PROVAO.bin", "rb");
+
+  imprimirArea(&area);
+
+  for (int i = 0; i < 10; i++) {
+    fread(&registro, sizeof(Registro), 1, pArquivo);
+    inserirOrdenadoNaArea(&area, &registro);
+    imprimirArea(&area);
+  }
+
+  imprimirArea(&area);
+}
+*/

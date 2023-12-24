@@ -13,8 +13,6 @@ typedef struct entrada {
 } Entrada;
 
 
-// Aceita ate 512KB por pagina, caso necessario realizar paginacao
-static unsigned long int ITENS_POR_PAGINA = (512 * 1024) / sizeof(Registro);
 
 // Le "n" linhas do arquivo "PROVAO.TXT"
 void lerNElementosDoArquivo(FILE *arquivo, Registro registros[],

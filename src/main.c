@@ -4,7 +4,6 @@
 #include <string.h>
 
 #include "include/quicksort.h"
-#include "include/registro.h"
 #include "include/util.h"
 
 int main(int argc, char *argv[]) {
@@ -83,8 +82,8 @@ int main(int argc, char *argv[]) {
       printf("Arquivo nao pode ser aberto\n");
       exit(1);
     }
-    
-    quicksortExterno(pArqLi, pArqLs, pArqEi, pArqEs, 1, entrada.qtde_registros);
+
+    quicksortExterno();
   } break;
   }
 

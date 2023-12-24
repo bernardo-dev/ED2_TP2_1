@@ -5,4 +5,6 @@
 
 bool quicksortExterno(FILE *, FILE *, FILE *, FILE *, int, int);
 
+//void quicksortExterno();
+
 #endif // QUICKSORT_H
