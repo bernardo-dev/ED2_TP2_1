@@ -52,31 +52,8 @@ void printV(Registro *r, unsigned int n)
 
 bool syncBuffer(FILE **arqLi, FILE **arqEi, FILE **arqLs, FILE **arqEs)
 {
-  fclose(*arqLi);
-  fclose(*arqEi);
-  fclose(*arqLs);
-  fclose(*arqEs);
-
-  if((*arqLi = fopen("PROVAO.bin", "rb")) == NULL)
+  if(fflush(*arqLi) || fflush(*arqEi) || fflush(*arqLs) || fflush(*arqEs))
     return false;
-  else if((*arqEi = fopen("PROVAO.bin", "r+b")) == NULL)
-  {
-    fclose(*arqLi);
-    return false;
-  }
-  else if((*arqLs = fopen("PROVAO.bin", "rb")) == NULL)
-  {
-    fclose(*arqLi);
-    fclose(*arqEi);
-    return false;
-  }
-  else if((*arqEs = fopen("PROVAO.bin", "r+b")) == NULL)
-  {
-    fclose(*arqLi);
-    fclose(*arqEi);
-    fclose(*arqLs);
-    return false;
-  }
 
   return true;
 }
@@ -180,7 +157,8 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLs, FILE **arqEs, Area *area
     // Escreve os registros ordenados no inicio do subarquivo.
     fwrite(area->area_pivos, sizeof(Registro), qtde_registros_subarquivo, *arqEi);
     // Sincroniza os buffers de cada apontador do arquivo binario.
-    syncBuffer(arqLi, arqEi, arqLs, arqEs);
+    if(syncBuffer(arqLi, arqEi, arqLs, arqEs) == false)
+      exit(1);
 
     *i = esq;
     *j = dir;
