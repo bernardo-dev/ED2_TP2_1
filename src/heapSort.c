@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include "registro.h"
 #include "lista.h"
 
@@ -42,37 +43,48 @@ void heapSort(Registro *v, int n){
     }
 }
 
-void troca(Registro *a, Registro *b){
-    Registro temp = *a;
-    *a = *b;
-    *b = temp;
+void heapRefazM(Registro *v, short *marcados, int esq, int dir){
+    int i = esq;
+    int j = i * 2 + 1;
+
+    Registro aux = v[i];
+    short auxM = marcados[i];
+
+    while(j <= dir){
+        if((j < dir && v[j].nota < v[j+1].nota) || marcados[j+1] == 1) 
+            j++;
+        if(aux.nota >= v[j].nota || auxM == 1)
+            break;
+        v[i] = v[j];
+        marcados[i] = marcados[j];
+        i = j;
+        j = i*2+1;
+    }
+    v[i] = aux;
+    marcados[i] = auxM;
 }
 
-void heapfy(Registro *vetor, short *marcados, int n, int i) {
-    int maior = i;
-    int esq = 2 * i + 1;
-    int dir = 2 * i + 2;
-
-    if(esq < n && (vetor[esq].nota > vetor[maior].nota || (vetor[esq].nota == vetor[maior].nota && marcados[esq])))
-        maior = esq;
-
-    if(dir < n && (vetor[dir].nota > vetor[maior].nota || (vetor[dir].nota == vetor[maior].nota && marcados[dir])))
-        maior = dir;
-
-    if(maior != i){
-        troca(&vetor[i], &vetor[maior]);
-        troca(&marcados[i], &marcados[maior]);
-        heapfy(vetor, marcados, n, maior);
+void heapConstroiM(Registro *v, short *marcados, int n){
+    int esq;
+    esq = (n/2) - 1;
+    while(esq >= 0){
+        heapRefazM(v, marcados, esq, n-1);
+        esq--;
     }
 }
 
 void heapSortM(Registro *vetor, short *marcados, int n) {
-    for(int i = n / 2 - 1; i >= 0; i--)
-        heapfy(vetor, marcados, n, i);
-    
-    for(int i = n-1; i > 0; i--){
-        troca(&vetor[0], &vetor[i]);
-        troca(&marcados[0], &marcados[i]);
-        heapfy(vetor, marcados, i, 0);
+    Registro aux;
+    short auxM;
+    heapConstroiM(vetor, marcados, n);
+    while(n > 1){
+        aux = vetor[n-1];
+        auxM = marcados[n-1];
+        vetor[n-1] = vetor[0];
+        marcados[n-1] = marcados[0];
+        vetor[0] = aux;
+        marcados[0] = auxM;
+        n--;
+        heapRefazM(vetor, marcados, 0, n-1);
     }
 }
