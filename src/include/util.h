@@ -12,6 +12,14 @@ typedef struct entrada {
   char opcional[3];
 } Entrada;
 
+typedef struct {
+  // Leitura e escrita entre as memorias principal e secundaria
+  unsigned long int n_leitura;
+  unsigned long int n_escrita;
+  unsigned long int n_comparacao;
+  double t_execucao;
+} Metrica;
+
 // Le "n" linhas do arquivo "PROVAO.TXT"
 void lerNElementosDoArquivo(FILE *arquivo, Registro registros[],
                             unsigned int n);

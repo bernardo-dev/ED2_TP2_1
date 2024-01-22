@@ -42,38 +42,34 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  switch (entrada.metodo) 
-  {
-    case 1:
-    {
-      printf("Executando o método 2f-fitas\n");
-      break;
+  switch (entrada.metodo) {
+  case 1: {
+    printf("Executando o método 2f-fitas\n");
+    break;
+  }
+  case 2: {
+    printf("Executando o método f+1 fitas\n");
+    break;
+  }
+  case 3: {
+    fclose(arquivo_binario);
+
+    if (quickSortExterno(entrada.qtde_registros) == false) {
+      printf("Erro ao tentar executar o metodo QuickSort Externo. Abortando o "
+             "programa...\n");
+      exit(1);
     }
-    case 2:
-    {
-      printf("Executando o método f+1 fitas\n");
-      break;
+
+    if ((arquivo_binario = fopen("PROVAO.bin", "rb")) == NULL) {
+      printf("Erro ao tentar abrir o arquivo binario novamente! Abortando o "
+             "programa...\n");
+      exit(1);
     }
-    case 3:
-    {
-      fclose(arquivo_binario);
 
-      if(quickSortExterno(entrada.qtde_registros) == false)
-      {
-        printf("Erro ao tentar executar o metodo QuickSort Externo. Abortando o programa...\n");
-        exit(1);
-      }
+    converterParaTexto(arquivo_binario, entrada.qtde_registros);
 
-      if((arquivo_binario = fopen("PROVAO.bin", "rb")) == NULL)
-      {
-        printf("Erro ao tentar abrir o arquivo binario novamente! Abortando o programa...\n");
-        exit(1);
-      }
-
-      converterParaTexto(arquivo_binario, entrada.qtde_registros);
-
-      break;
-    }
+    break;
+  }
   }
 
   fclose(arquivo);

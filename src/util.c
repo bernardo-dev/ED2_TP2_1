@@ -56,7 +56,8 @@ FILE *converterParaBinario(FILE *arquivo, unsigned int qtde_registros_arquivo) {
   return arquivo_binario;
 }
 
-// Converte o arquivo binario "PROVAO.bin" para um arquivo equivalente em texto "PROVAO_{qntde_registros}.tx".
+// Converte o arquivo binario "PROVAO.bin" para um arquivo equivalente em texto
+// "PROVAO_{qntde_registros}.tx".
 FILE *converterParaTexto(FILE *arquivo, unsigned int qtde_registros_arquivo) {
   unsigned int qtde_registros_lidos;
   char nome_arquivo[21];
@@ -64,10 +65,10 @@ FILE *converterParaTexto(FILE *arquivo, unsigned int qtde_registros_arquivo) {
   FILE *arquivo_texto;
 
   sprintf(nome_arquivo, "PROVAO_%u.txt", qtde_registros_arquivo);
-  
+
   pagina = alocarRegistros(ITENS_POR_PAGINA);
 
-  if(pagina == NULL)
+  if (pagina == NULL)
     return NULL;
 
   if ((arquivo_texto = fopen(nome_arquivo, "w")) == NULL)
@@ -75,12 +76,12 @@ FILE *converterParaTexto(FILE *arquivo, unsigned int qtde_registros_arquivo) {
 
   rewind(arquivo);
 
-  while((qtde_registros_lidos = fread(pagina, sizeof(Registro), ITENS_POR_PAGINA, arquivo)) != 0)
-    for(unsigned int i = 0 ; i < qtde_registros_lidos ; i++)
+  while ((qtde_registros_lidos =
+              fread(pagina, sizeof(Registro), ITENS_POR_PAGINA, arquivo)) != 0)
+    for (unsigned int i = 0; i < qtde_registros_lidos; i++)
       fprintf(arquivo_texto, "%08lu %05.1lf %2s %50s %30s\n",
-               pagina[i].numero_inscricao, pagina[i].nota,
-               pagina[i].estado, pagina[i].cidade,
-               pagina[i].curso);
+              pagina[i].numero_inscricao, pagina[i].nota, pagina[i].estado,
+              pagina[i].cidade, pagina[i].curso);
 
   desalocarRegistros(pagina);
 
@@ -123,4 +124,13 @@ void imprimirArquivoBinario(FILE *pArquivo) {
   while (fread(&registro, sizeof(Registro), 1, pArquivo)) {
     printf("Registro = %lf\n", registro.nota);
   }
+}
+
+void exibirMetricas(Metrica *metricas) {
+  printf("\n--------- METRICAS ---------\n");
+  printf("LEITURAS E ESCRITAS ENTRE AS MEMORIAS PRINCIPAL E SECUNDARIA\n");
+  printf("NUMERO TOTAL DE LEITURAS %lu\n", metricas->n_leitura);
+  printf("NUMERO TOTAL DE ESCRITAS %lu\n", metricas->n_escrita);
+  printf("NUMERO TOTAL DE COMPARACOES %lu\n", metricas->n_comparacao);
+  printf("TEMPO TOTAL DE EXECUCAO %.8fs\n", metricas->t_execucao);
 }
