@@ -2,5 +2,6 @@
 *.txt
 *.TXT
 build/
+src/.vscode/*
 valgrind-out.txt
 
