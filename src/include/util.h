@@ -36,4 +36,10 @@ bool lerEntrada(Entrada *entrada, int argc, char *argv[]);
 // Imprime apenas as notas dos registros do arquivo binario
 void imprimirArquivoBinario(FILE *);
 
+// Imprime as métricas no terminal
+void exibirMetricas(Metrica *);
+
+// Reseta as métricas para o valor inicial (0)
+void resetaMetricas(Metrica *);
+
 #endif // UTIL_H

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <time.h>
 
 #include "include/registro.h"
 #include "include/util.h"
@@ -270,6 +271,12 @@ void ordena(FILE **arqLi, FILE **arqEi, FILE **arqLs, FILE **arqEs, int esq,
 }
 
 bool quickSortExterno(unsigned int qtde_registros, Metrica *metricas) {
+  clock_t inicio;
+  clock_t fim;
+
+  // Inicio da contagem de tempo de execucao do metodo.
+  inicio = clock();
+
   // Ponteiro de leitura na particao inferior do arquivo "PROVAO.bin"
   FILE *arqLi;
   // Ponteiro de escrita na particao inferior do arquivo "PROVAO.bin"
@@ -302,6 +309,10 @@ bool quickSortExterno(unsigned int qtde_registros, Metrica *metricas) {
   fclose(arqEi);
   fclose(arqLs);
   fclose(arqEs);
+
+  // Fim da contagem de tempo de execucao do metodo.
+  fim = clock();
+  metricas->t_execucao += ((double) (fim - inicio) )
 
   return true;
 }

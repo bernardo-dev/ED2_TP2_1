@@ -42,6 +42,9 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
+  Metrica metricas;
+  resetaMetricas(&metricas);
+
   switch (entrada.metodo) {
   case 1: {
     printf("Executando o método 2f-fitas\n");
@@ -54,7 +57,7 @@ int main(int argc, char *argv[]) {
   case 3: {
     fclose(arquivo_binario);
 
-    if (quickSortExterno(entrada.qtde_registros) == false) {
+    if (quickSortExterno(entrada.qtde_registros, &metricas) == false) {
       printf("Erro ao tentar executar o metodo QuickSort Externo. Abortando o "
              "programa...\n");
       exit(1);
