@@ -82,13 +82,15 @@ void escreveParticaoSuperior(FILE **arqEs, Registro *registro_escrito,
   (*escrita_superior)--;
 }
 
-void inserirArea(Area *area, Registro *registro) {
+void inserirArea(Area *area, Registro *registro, Metrica *metricas) {
   unsigned int i = area->n;
 
   while (i > 0 && registro->nota <= area->area_pivos[i - 1].nota) {
     area->area_pivos[i] = area->area_pivos[i - 1];
     i--;
+    metricas->n_comparacao++;
   }
+  metricas->n_comparacao++;
 
   area->area_pivos[i] = *registro;
   area->n++;
@@ -148,9 +150,13 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLs, FILE **arqEs,
     // da area dos pivos.
     ordenarEmMemoriaPrincipal(arqLi, area->area_pivos,
                               qtde_registros_subarquivo);
+    metricas->n_leitura++;
+
     // Escreve os registros ordenados no inicio do subarquivo.
     fwrite(area->area_pivos, sizeof(Registro), qtde_registros_subarquivo,
            *arqEi);
+    metricas->n_escrita++;
+
     // Sincroniza os buffers de cada apontador do arquivo binario.
     if (syncBuffer(arqLi, arqEi, arqLs, arqEs) == false)
       exit(1);
@@ -173,7 +179,7 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLs, FILE **arqEs,
         alternar = true;
       }
 
-      inserirArea(area, &ultimo_lido);
+      inserirArea(area, &ultimo_lido, metricas);
     } else {
       if (leitura_inferior == escrita_inferior) {
         leParticaoInferior(arqLi, &ultimo_lido, &leitura_inferior);
@@ -197,22 +203,25 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLs, FILE **arqEs,
       if (ultimo_lido.nota < limite_inferior) {
         *i = escrita_inferior;
         escreveParticaoInferior(arqEi, &ultimo_lido, &escrita_inferior);
+        metricas->n_escrita++;
 
         if (syncBuffer(arqLi, arqEi, arqLs, arqEs) == false)
           exit(1);
       } else if (ultimo_lido.nota > limite_superior) {
         *j = escrita_superior;
         escreveParticaoSuperior(arqEs, &ultimo_lido, &escrita_superior);
+        metricas->n_escrita++;
 
         if (syncBuffer(arqLi, arqEi, arqLs, arqEs) == false)
           exit(1);
       } else {
-        inserirArea(area, &ultimo_lido);
+        inserirArea(area, &ultimo_lido, metricas);
 
         if (escrita_inferior - esq <= dir - escrita_superior) {
           limite_inferior = area->area_pivos[0].nota;
           escreveParticaoInferior(arqEi, &area->area_pivos[0],
                                   &escrita_inferior);
+          metricas->n_escrita++;
           retirarArea(area, 0);
 
           if (syncBuffer(arqLi, arqEi, arqLs, arqEs) == false)
@@ -221,6 +230,7 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLs, FILE **arqEs,
           limite_superior = area->area_pivos[area->n - 1].nota;
           escreveParticaoSuperior(arqEs, &area->area_pivos[area->n - 1],
                                   &escrita_superior);
+          metricas->n_escrita++;
           retirarArea(area, area->n - 1);
 
           if (syncBuffer(arqLi, arqEi, arqLs, arqEs) == false)
@@ -232,6 +242,7 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLs, FILE **arqEs,
 
   while (escrita_inferior <= escrita_superior) {
     escreveParticaoInferior(arqEi, &area->area_pivos[0], &escrita_inferior);
+    metricas->n_escrita++;
     retirarArea(area, 0);
 
     if (syncBuffer(arqLi, arqEi, arqLs, arqEs) == false)
@@ -312,7 +323,7 @@ bool quickSortExterno(unsigned int qtde_registros, Metrica *metricas) {
 
   // Fim da contagem de tempo de execucao do metodo.
   fim = clock();
-  metricas->t_execucao += ((double) (fim - inicio) )
+  metricas->t_execucao += ((double) (fim - inicio)) / CLOCKS_PER_SEC;
 
   return true;
 }
