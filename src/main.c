@@ -4,12 +4,14 @@
 #include <string.h>
 
 #include "include/quicksort.h"
-#include "include/registro.h"
 #include "include/util.h"
+#include "include/duasFitas.h"
+
 
 int main(int argc, char *argv[]) {
   FILE *arquivo;
   FILE *arquivo_binario;
+  FILE *aux;
   Entrada entrada;
 
   // Le entrada e verifica se eh valida. Retorna "true" se for valida e
@@ -69,6 +71,9 @@ int main(int argc, char *argv[]) {
   switch (entrada.metodo) {
   case 1: {
     printf("Executando o método 2f-fitas\n");
+    aux = doisFfitas(arquivo_binario, entrada.qtde_registros, &metricas);
+    converterParaTexto(aux, entrada.qtde_registros);
+    exibirMetricas(&metricas);
     break;
   }
   case 2: {

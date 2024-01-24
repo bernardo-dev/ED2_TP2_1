@@ -22,7 +22,7 @@ INC_DIRS := $(shell find $(SRC_DIRS) -type d)
 INC_FLAGS := $(addprefix -I, $(INC_DIRS))
 
 # Define as flags de compilação para o pré-processador
-CFLAGS := $(INC_FLAGS) -MMD -MP -Wall -Wextra #-Werror -std=c17
+CFLAGS := $(INC_FLAGS) -MMD -MP -Wall -Wextra -Werror -std=c17
 CFLAGS_DEBUG := $(CFLAGS) -g
 
 # Define a regra para gerar o executável

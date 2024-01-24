@@ -52,10 +52,10 @@ for q in quantidade:
       # escritor_csv.writerow(["Total de escritas", escritas[0].group(1), escritas[1].group(1), escritas[2].group(1)])
       # escritor_csv.writerow(["Total de comparacoes", comparacoes[0].group(1), comparacoes[1].group(1), comparacoes[2].group(1)])
       # escritor_csv.writerow(["Tempo de execucao", tempo_execucao[0].group(1), tempo_execucao[1].group(1), tempo_execucao[2].group(1)])
-      escritor_csv.writerow(["Total de Leituras", 0, 0, leituras[2].group(1)])
-      escritor_csv.writerow(["Total de escritas", 0, 0, escritas[2].group(1)])
-      escritor_csv.writerow(["Total de comparacoes", 0, 0, comparacoes[2].group(1)])
-      escritor_csv.writerow(["Tempo de execucao", 0, 0, tempo_execucao[2].group(1)])
+      escritor_csv.writerow(["Total de Leituras", leituras[0].group(1), 0, leituras[2].group(1)])
+      escritor_csv.writerow(["Total de escritas", escritas[0].group(1), 0, escritas[2].group(1)])
+      escritor_csv.writerow(["Total de comparacoes", comparacoes[0].group(1), 0, comparacoes[2].group(1)])
+      escritor_csv.writerow(["Tempo de execucao", tempo_execucao[0].group(1), 0, tempo_execucao[2].group(1)])
 
 
 '''
