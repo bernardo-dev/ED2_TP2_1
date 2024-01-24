@@ -22,10 +22,31 @@ int main(int argc, char *argv[]) {
   }
 
   // Tenta abrir o arquivo "PROVAO.TXT" disponibilizado pelo docente.
-  if ((arquivo = fopen("PROVAO.TXT", "r+")) == NULL) {
-    printf("Erro ao tentar abrir o arquivo de texto plano PROVAO.TXT! "
-           "Abortando o programa...\n");
-    exit(1);
+  switch (entrada.situacao) {
+  case 1: {
+    if ((arquivo = fopen("PROVAO_ASCENDENTE.TXT", "r+")) == NULL) {
+      printf("Erro ao tentar abrir o arquivo de texto plano PROVAO.TXT! "
+             "Abortando o programa...\n");
+      exit(1);
+    }
+    break;
+  }
+  case 2: {
+    if ((arquivo = fopen("PROVAO_DESCENDENTE.TXT", "r+")) == NULL) {
+      printf("Erro ao tentar gerar o arquivo de texto plano ordenado! "
+             "Abortando o programa...\n");
+      exit(1);
+    }
+    break;
+  }
+  case 3: {
+    if ((arquivo = fopen("PROVAO.TXT", "r+")) == NULL) {
+      printf("Erro ao tentar abrir o arquivo de texto plano PROVAO.TXT! "
+             "Abortando o programa...\n");
+      exit(1);
+    }
+    break;
+  }
   }
 
   /*
@@ -71,6 +92,7 @@ int main(int argc, char *argv[]) {
 
     converterParaTexto(arquivo_binario, entrada.qtde_registros);
 
+    exibirMetricas(&metricas);
     break;
   }
   }

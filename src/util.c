@@ -11,7 +11,7 @@ static unsigned long int ITENS_POR_PAGINA = (512 * 1024) / sizeof(Registro);
 void lerNElementosDoArquivo(FILE *arquivo, Registro registros[],
                             unsigned int n) {
   for (unsigned int i = 0; i < n; i++) {
-    if (fscanf(arquivo, "%8lu %5lf %2s %50[A-Z ] %30s",
+    if (fscanf(arquivo, "%8lu %5lf %2s %50[A-Z'\\ -] %30s",
                &registros[i].numero_inscricao, &registros[i].nota,
                registros[i].estado, registros[i].cidade,
                registros[i].curso) == EOF)
@@ -79,9 +79,14 @@ FILE *converterParaTexto(FILE *arquivo, unsigned int qtde_registros_arquivo) {
   while ((qtde_registros_lidos =
               fread(pagina, sizeof(Registro), ITENS_POR_PAGINA, arquivo)) != 0)
     for (unsigned int i = 0; i < qtde_registros_lidos; i++)
-      fprintf(arquivo_texto, "%08lu %05.1lf %2s %50s %30s\n",
+      // Para garantir que a ultima variavel esteja sempre na coluna 70 do
+      // arquivo texto, foi usado o especificador de formato "%*s" de largura
+      // minima do campo. O numero cinco foi calculado a partir de 
+      // 70 - 8 - 5 - 2 - 50
+      // O "-" antes do 50 garante que o campo seja alinhado a esquerda
+      fprintf(arquivo_texto, "%08lu %05.1lf %2s %-50s %*s\n",
               pagina[i].numero_inscricao, pagina[i].nota, pagina[i].estado,
-              pagina[i].cidade, pagina[i].curso);
+              pagina[i].cidade, 5, pagina[i].curso);
 
   desalocarRegistros(pagina);
 
@@ -129,10 +134,10 @@ void imprimirArquivoBinario(FILE *pArquivo) {
 void exibirMetricas(Metrica *metricas) {
   printf("\n--------- METRICAS ---------\n");
   printf("LEITURAS E ESCRITAS ENTRE AS MEMORIAS PRINCIPAL E SECUNDARIA\n");
-  printf("NUMERO TOTAL DE LEITURAS %lu\n", metricas->n_leitura);
-  printf("NUMERO TOTAL DE ESCRITAS %lu\n", metricas->n_escrita);
-  printf("NUMERO TOTAL DE COMPARACOES %lu\n", metricas->n_comparacao);
-  printf("TEMPO TOTAL DE EXECUCAO %.8fs\n", metricas->t_execucao);
+  printf("NUMERO TOTAL DE LEITURAS: %lu\n", metricas->n_leitura);
+  printf("NUMERO TOTAL DE ESCRITAS: %lu\n", metricas->n_escrita);
+  printf("NUMERO TOTAL DE COMPARACOES: %lu\n", metricas->n_comparacao);
+  printf("TEMPO TOTAL DE EXECUCAO: %.8fs\n", metricas->t_execucao);
 }
 
 void resetaMetricas(Metrica *metricas) {
