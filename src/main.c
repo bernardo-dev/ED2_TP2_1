@@ -80,10 +80,6 @@ int main(int argc, char *argv[]) {
 
     converterParaTexto(aux, entrada.qtde_registros);
 
-    if (strcmp(entrada.opcional, "-p") == 0) {
-      imprimirArquivoTexto(aux, entrada.qtde_registros);
-    }
-
     exibirMetricas(&metricas);
     break;
   }
@@ -101,10 +97,6 @@ int main(int argc, char *argv[]) {
     }
 
     converterParaTexto(fita_saida, entrada.qtde_registros);
-
-    if (strcmp(entrada.opcional, "-p") == 0) {
-      imprimirArquivoTexto(fita_saida, entrada.qtde_registros);
-    }
 
     fclose(fita_saida);
 
@@ -129,15 +121,22 @@ int main(int argc, char *argv[]) {
 
     converterParaTexto(arquivo_binario, entrada.qtde_registros);
 
-    if (strcmp(entrada.opcional, "-p") == 0) {
-      imprimirArquivoTexto(arquivo_binario, entrada.qtde_registros);
-    }
-
     exibirMetricas(&metricas);
     break;
   }
   }
 
+  char nome_arquivo[21];
+  sprintf(nome_arquivo, "PROVAO_%u.txt", entrada.qtde_registros);
+
+  FILE *arquivo_ordenado;
+  arquivo_ordenado = fopen(nome_arquivo, "r");
+
+  if (strcmp(entrada.opcional, "-p") == 0) {
+    imprimirArquivoTexto(arquivo_ordenado, entrada.qtde_registros);
+  }
+  
+  fclose(arquivo_ordenado);
   fclose(arquivo);
   fclose(arquivo_binario);
 
