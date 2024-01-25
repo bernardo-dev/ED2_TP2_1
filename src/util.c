@@ -139,6 +139,7 @@ void exibirMetricas(Metrica *metricas) {
   printf("NUMERO TOTAL DE ESCRITAS: %lu\n", metricas->n_escrita);
   printf("NUMERO TOTAL DE COMPARACOES: %lu\n", metricas->n_comparacao);
   printf("TEMPO TOTAL DE EXECUCAO: %.8fs\n", metricas->t_execucao);
+  printf("----------------------------\n\n");
 }
 
 void resetaMetricas(Metrica *metricas) {
