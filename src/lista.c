@@ -1,37 +1,25 @@
-#include "include/util.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "include/registro.h"
 
-Celula *alocarCelula(Metrica *metrica) {
+Celula *alocarCelula() {
   Celula *celula = (Celula *)malloc(sizeof(Celula));
-  metrica->n_leitura++;
 
   if (celula != NULL) {
     celula->qtde_itens_bloco = 0;
     celula->proximo = NULL;
   }
 
-  metrica->n_escrita++;
   return celula;
 }
 
 void iniciaListas(Lista blocos_fita_entrada[N_FITAS_ENTRADA],
-                  Lista blocos_fita_saida[N_FITAS_SAIDA], Metrica *metricas) {
-  // ----- Mudanca -------
-  // Como no caso de 2f fitas existem mais de um bloco, precisa-se passar de um
-  // por um
-  // ------ Codigo f1 -------------
-  // blocos_fita_saida->cabeca = alocarCelula();
-
-  // if(blocos_fita_saida->cabeca == NULL)
-  // exit(1);
-
-  // blocos_fita_saida->ultimo = NULL;
+                  Lista blocos_fita_saida[N_FITAS_SAIDA]) {
 
   for (unsigned short i = 0; i < N_FITAS_SAIDA; i++) {
 
-    blocos_fita_saida[i].cabeca = alocarCelula(metricas);
+    blocos_fita_saida[i].cabeca = alocarCelula();
 
     if (blocos_fita_saida[i].cabeca == NULL)
       exit(1);
@@ -40,7 +28,7 @@ void iniciaListas(Lista blocos_fita_entrada[N_FITAS_ENTRADA],
   }
 
   for (unsigned short i = 0; i < N_FITAS_ENTRADA; i++) {
-    blocos_fita_entrada[i].cabeca = alocarCelula(metricas);
+    blocos_fita_entrada[i].cabeca = alocarCelula();
 
     // Se nao foi possivel alocar memoria, o programa termina
     if (blocos_fita_entrada[i].cabeca == NULL)
@@ -48,16 +36,13 @@ void iniciaListas(Lista blocos_fita_entrada[N_FITAS_ENTRADA],
 
     blocos_fita_entrada[i].ultimo = NULL;
   }
-
-  metricas->n_escrita += N_FITAS_ENTRADA + N_FITAS_SAIDA;
 }
 
 bool listaEstaVazia(Lista *lista) { return lista->cabeca->proximo == NULL; }
 
-void insereLista(Lista *lista, unsigned int qtde_itens_bloco,
-                 Metrica *metrica) {
+void insereLista(Lista *lista, unsigned int qtde_itens_bloco) {
   if (listaEstaVazia(lista)) {
-    lista->ultimo = alocarCelula(metrica);
+    lista->ultimo = alocarCelula();
 
     // Se nao foi possivel alocar memoria, o programa termina
     if (lista->ultimo == NULL)
@@ -66,7 +51,7 @@ void insereLista(Lista *lista, unsigned int qtde_itens_bloco,
     lista->cabeca->proximo = lista->ultimo;
     lista->ultimo->qtde_itens_bloco = qtde_itens_bloco;
   } else {
-    lista->ultimo->proximo = alocarCelula(metrica);
+    lista->ultimo->proximo = alocarCelula();
 
     // Se nao foi possivel alocar memoria, o programa termina
     if (lista->ultimo->proximo == NULL)
@@ -101,10 +86,9 @@ bool apenasUmaFitaPossuiBlocos(Lista blocos_fitas_saida[N_FITAS_SAIDA]) {
 }
 
 bool todasAsFitasDeEntradaEstaoVazias(
-    Lista blocos_fitas_entrada[N_FITAS_ENTRADA], Metrica *metricas) {
+    Lista blocos_fitas_entrada[N_FITAS_ENTRADA]) {
   for (unsigned short i = 0; i < N_FITAS_ENTRADA; i++)
     if (!listaEstaVazia(&blocos_fitas_entrada[i])) {
-      metricas->n_comparacao++;
       return false;
     }
 
