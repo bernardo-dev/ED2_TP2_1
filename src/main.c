@@ -6,6 +6,7 @@
 #include "include/quicksort.h"
 #include "include/util.h"
 #include "include/duasFitas.h"
+#include "include/umaFita.h"
 
 
 int main(int argc, char *argv[]) {
@@ -71,13 +72,32 @@ int main(int argc, char *argv[]) {
   switch (entrada.metodo) {
   case 1: {
     printf("Executando o método 2f-fitas\n");
+
     aux = doisFfitas(arquivo_binario, entrada.qtde_registros, &metricas);
+
     converterParaTexto(aux, entrada.qtde_registros);
+
     exibirMetricas(&metricas);
     break;
   }
   case 2: {
     printf("Executando o método f+1 fitas\n");
+
+    FILE *fita_saida;
+
+    fita_saida = f1fitas(arquivo_binario, entrada.qtde_registros, &metricas);
+
+    if(fita_saida == NULL)
+    {
+      printf("Algum erro inesperado ocorreu ao executar o metodo F + 1 fitas! Abortando o programa...\n");
+      exit(1);
+    }
+
+    converterParaTexto(fita_saida, entrada.qtde_registros);
+
+    fclose(fita_saida);
+
+    exibirMetricas(&metricas);
     break;
   }
   case 3: {
