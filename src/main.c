@@ -3,11 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "include/quicksort.h"
-#include "include/util.h"
 #include "include/duasFitas.h"
+#include "include/quicksort.h"
 #include "include/umaFita.h"
-
+#include "include/util.h"
 
 int main(int argc, char *argv[]) {
   FILE *arquivo;
@@ -52,6 +51,10 @@ int main(int argc, char *argv[]) {
   }
   }
 
+  if (strcmp(entrada.opcional, "-p") == 0) {
+    imprimirArquivoTexto(arquivo, entrada.qtde_registros);
+  }
+
   /*
       Cria uma versao binaria do arquivo de texto plano "PROVAO.TXT" cuja
       quantidade total de registros eh a quantidade passada por argumento
@@ -77,6 +80,10 @@ int main(int argc, char *argv[]) {
 
     converterParaTexto(aux, entrada.qtde_registros);
 
+    if (strcmp(entrada.opcional, "-p") == 0) {
+      imprimirArquivoTexto(aux, entrada.qtde_registros);
+    }
+
     exibirMetricas(&metricas);
     break;
   }
@@ -87,13 +94,17 @@ int main(int argc, char *argv[]) {
 
     fita_saida = f1fitas(arquivo_binario, entrada.qtde_registros, &metricas);
 
-    if(fita_saida == NULL)
-    {
-      printf("Algum erro inesperado ocorreu ao executar o metodo F + 1 fitas! Abortando o programa...\n");
+    if (fita_saida == NULL) {
+      printf("Algum erro inesperado ocorreu ao executar o metodo F + 1 fitas! "
+             "Abortando o programa...\n");
       exit(1);
     }
 
     converterParaTexto(fita_saida, entrada.qtde_registros);
+
+    if (strcmp(entrada.opcional, "-p") == 0) {
+      imprimirArquivoTexto(fita_saida, entrada.qtde_registros);
+    }
 
     fclose(fita_saida);
 
@@ -101,6 +112,7 @@ int main(int argc, char *argv[]) {
     break;
   }
   case 3: {
+    printf("Executando o método QuickSort Externo\n");
     fclose(arquivo_binario);
 
     if (quickSortExterno(entrada.qtde_registros, &metricas) == false) {
@@ -116,6 +128,10 @@ int main(int argc, char *argv[]) {
     }
 
     converterParaTexto(arquivo_binario, entrada.qtde_registros);
+
+    if (strcmp(entrada.opcional, "-p") == 0) {
+      imprimirArquivoTexto(arquivo_binario, entrada.qtde_registros);
+    }
 
     exibirMetricas(&metricas);
     break;

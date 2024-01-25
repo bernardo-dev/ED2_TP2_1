@@ -1,5 +1,5 @@
 # Define o nome do executável que será gerado
-TARGET_EXEC := exe
+TARGET_EXEC := ordena
 
 # Define o diretório onde os arquivos objeto serão gerados
 BUILD_DIR := ./build
@@ -26,9 +26,10 @@ CFLAGS := $(INC_FLAGS) -MMD -MP -Wall -Wextra -Werror -std=c17
 CFLAGS_DEBUG := $(CFLAGS) -g
 
 # Define a regra para gerar o executável
-$(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
+# $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
+# 	$(CC) $(OBJS) -o $@ $(LDFLAGS)
+$(TARGET_EXEC): $(OBJS)
 	$(CC) $(OBJS) -o $@ $(LDFLAGS)
-
 # Define a regra para gerar o arquivo objeto de debug
 $(BUILD_DIR)/$(TARGET_EXEC)_debug: $(OBJS_DEBUG)
 	$(CC) $(OBJS_DEBUG) -o $@ $(LDFLAGS)
@@ -48,6 +49,7 @@ $(BUILD_DIR)/src/%.debug.o: $(SRC_DIRS)/%.c
 clean:
 	rm -r $(BUILD_DIR)
 	rm -rf PROVAO.bin
+	rm -rf ordena
 
 .PHONY: valgrind
 valgrind: $(BUILD_DIR)/$(TARGET_EXEC)_debug

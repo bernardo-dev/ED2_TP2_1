@@ -26,7 +26,7 @@ for q in quantidade:
       tempo_execucao = []
 
       for m_key, m_value in metodo.items():
-        comando_gerar = f"./build/exe {m_key} {q} {s_key}"
+        comando_gerar = f"./ordena {m_key} {q} {s_key}"
         print(comando_gerar)
 
         # Executa o comando no terminal
@@ -46,11 +46,7 @@ for q in quantidade:
 
         print(saida_terminal)
       
-      # escritor_csv.writerow(["Total de Leituras", leituras[0].group(1), leituras[1].group(1), leituras[2].group(1)])
-      # escritor_csv.writerow(["Total de escritas", escritas[0].group(1), escritas[1].group(1), escritas[2].group(1)])
-      # escritor_csv.writerow(["Total de comparacoes", comparacoes[0].group(1), comparacoes[1].group(1), comparacoes[2].group(1)])
-      # escritor_csv.writerow(["Tempo de execucao", tempo_execucao[0].group(1), tempo_execucao[1].group(1), tempo_execucao[2].group(1)])
-      escritor_csv.writerow(["Total de Leituras", leituras[0].group(1), 0, leituras[2].group(1)])
-      escritor_csv.writerow(["Total de escritas", escritas[0].group(1), 0, escritas[2].group(1)])
-      escritor_csv.writerow(["Total de comparacoes", comparacoes[0].group(1), 0, comparacoes[2].group(1)])
-      escritor_csv.writerow(["Tempo de execucao", tempo_execucao[0].group(1), 0, tempo_execucao[2].group(1)])
+      escritor_csv.writerow(["Total de Leituras", leituras[0].group(1), leituras[1].group(1), leituras[2].group(1)])
+      escritor_csv.writerow(["Total de escritas", escritas[0].group(1), escritas[1].group(1), escritas[2].group(1)])
+      escritor_csv.writerow(["Total de comparacoes", comparacoes[0].group(1), comparacoes[1].group(1), comparacoes[2].group(1)])
+      escritor_csv.writerow(["Tempo de execucao", tempo_execucao[0].group(1), tempo_execucao[1].group(1), tempo_execucao[2].group(1)])

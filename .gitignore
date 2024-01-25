@@ -4,3 +4,4 @@ build/
 src/.vscode/*
 valgrind-out.txt
 metricas/*
+ordena

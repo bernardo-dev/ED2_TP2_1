@@ -1,4 +1,5 @@
 #include "include/util.h"
+#include <complex.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -145,4 +146,12 @@ void resetaMetricas(Metrica *metricas) {
   metricas->n_escrita = 0;
   metricas->n_leitura = 0;
   metricas->t_execucao = 0;
+}
+
+void imprimirArquivoTexto(FILE *pArquivo, unsigned int qtde_registros) {
+  char linha[256];
+  for (unsigned int i = 0; i < qtde_registros; i++) {
+    fgets(linha, sizeof(linha), pArquivo);
+    printf("%s", linha);
+  }
 }

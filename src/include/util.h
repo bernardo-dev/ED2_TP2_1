@@ -42,4 +42,7 @@ void exibirMetricas(Metrica *);
 // Reseta as métricas para o valor inicial (0)
 void resetaMetricas(Metrica *);
 
+// Imprime o arquivo texto
+void imprimirArquivoTexto(FILE *, unsigned int);
+
 #endif // UTIL_H
