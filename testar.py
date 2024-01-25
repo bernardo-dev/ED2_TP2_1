@@ -4,7 +4,7 @@ import subprocess
 import os
 
 metodo = {1: "2f fitas", 2: "f+1 fitas", 3: "Quicksort Externo"}
-quantidade = [100, 200, 2000, 20000, 471705]
+quantidade = [100, 200, 2000, 20000, 200000, 471705]
 situacao = {1: "Ascendente", 2: "Descendente", 3: "Aleatorio"}
 
 # Cria uma pasta se ela não existir
